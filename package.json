@@ -6,29 +6,14 @@
   "engines": {
     "node": ">=10.14.1"
   },
-  "scripts": {
-    "build": "tsc",
-    "build:watch": "yarn clean:build -w",
-    "clean": "rm -rf lib/*",
-    "lint": "eslint 'src/**'",
-    "prebuild": "yarn clean",
-    "postbuild": "yarn prettify:lib",
-    "prepublishOnly": "[ \"$NODE_ENV\" = \"production\" ] && exit 0; yarn build",
-    "pretest": "yarn lint",
-    "prettify:lib": "prettier --write 'lib/**/**/**.*s'",
-    "test": "jest",
-    "test:watch": "yarn test --watch",
-    "validate": "npm ls"
-  },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git+ssh://git@github.com:Ehbraheem/express-redis.git#main"
+    "url": "git+ssh://git+ssh://git@github.com:Ehbraheem/Pangaea.git#main"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
   "author": "ehbraheem@gmail.com",
-  "license": "SEE LICENSE IN <LICENSE>",
   "dependencies": {
     "express": "4.17.1",
     "http-redis": "^0.0.0-rc.1.0"
