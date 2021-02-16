@@ -1,5 +1,8 @@
 const express = require('express')
 const httpRedis = require('http-redis').default
+const { request } = require('https');
+
+
 const app = express()
 const port = 3000
 
@@ -10,6 +13,24 @@ app.use(express.json())
 const PREFIX = 'publisher';
 
 const redis = httpRedis({ mode: 'regular', options: { port: 6379, host: 'localhost' } })
+
+const postToUrl = body => url => new Promise((resolve, reject) => {
+  const req = request(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }, res => {
+    const vals = [];
+    res.on('data', vals.push)
+    res.on('end', () => {
+      resolve(JSON.parse(vals))
+    })
+  })
+  req.on('error', reject);
+  req.write(JSON.stringify(body));
+  req.end();
+})
 
 app.use(async (req, _, next) => {
   try {
@@ -49,6 +70,36 @@ app.post(/\/subscribe\/([a-zA-Z0-9-_]*)/, async (req, res, next) => {
 
     res.status(201)
     res.end(`{"success": "Subscription to topic ${topic} is successful"}`)
+  } catch (error) {
+    next(error)
+  }
+})
+
+app.post(/\/publish\/([a-zA-Z0-9-_]*)/, async (req, res, next) => {
+  try {
+    const { body, redis } = req;
+    const { 0: topic } = req.params;
+
+    if (!topic) {
+      res.status(400)
+      res.end('{"error": "Cannot subscribe to empty topic."}')
+      return;
+    }
+
+    if (!body || !body.message) {
+      res.status(400)
+      res.end('{"error": "Message cannot be empty."}')
+      return;
+    }
+    
+    const key = `${PREFIX}:${topic}`;
+    
+    let allTopicSubscribers = JSON.parse(await redis.get(key) || '[]');
+
+    await Promise.all(allTopicSubscribers.map(postToUrl({ data: body, topic })))
+
+    res.status(200)
+    res.end('{"success": "Message successfully published to all subscribers"}')
   } catch (error) {
     next(error)
   }
