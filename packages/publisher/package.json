@@ -6,6 +6,9 @@
   "engines": {
     "node": ">=10.14.1"
   },
+  "scripts": {
+    "start": "node lib/"
+  },
   "repository": {
     "type": "git",
     "url": "git+ssh://git+ssh://git@github.com:Ehbraheem/Pangaea.git#main"
