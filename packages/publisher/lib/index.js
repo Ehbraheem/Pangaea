@@ -4,7 +4,7 @@ const { request } = require('https');
 
 
 const app = express()
-const port = 3000
+const port = process.env.SERVICE_PORT || 3000
 
 console.log(httpRedis);
 
@@ -12,7 +12,7 @@ app.use(express.json())
 
 const PREFIX = 'publisher';
 
-const redis = httpRedis({ mode: 'regular', options: { port: 6379, host: 'localhost' } })
+const redis = httpRedis({ mode: 'regular', options: { host: process.env.REDIS_HOST } })
 
 const postToUrl = body => url => new Promise((resolve, reject) => {
   const req = request(url, {

@@ -1,5 +1,5 @@
 {
-  "name": "subcriber",
+  "name": "publisher",
   "version": "0.0.1",
   "description": "Configuration based Redis client middleware for Express.",
   "main": "lib/index.js",
