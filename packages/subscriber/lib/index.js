@@ -21,20 +21,21 @@ app.use(async (req, _, next) => {
   }
 })
 
-app.get('/events', async (req, res, next) => {
+app.post('/event', async (req, res, next) => {
   try {
-    const { body = { data: undefined, topic: undefined }, redis } = req;
+    const { body: { data, topic }, redis } = req;
     
     const key = `${PREFIX}:${topic}`;
     
-    // Not sure if this is needes
+    // Not sure if this is needed
     let allPreviousMessages = JSON.parse(await redis.get(key) || '[]');
 
-    await redis.set(key, JSON.stringify([...allPreviousMessages, body]));
+    await redis.set(key, JSON.stringify([...allPreviousMessages, { data, topic}]));
 
     res.status(201)
-    res.end(`{"success": "message ${body} successfully received."}`)
+    res.end(`{"success": "Message successfully received for topic ${topic}."}`)
   } catch (error) {
+    console.log(error)
     next(error)
   }
 })

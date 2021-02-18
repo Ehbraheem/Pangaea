@@ -20,10 +20,8 @@ const postToUrl = body => url => new Promise((resolve, reject) => {
     }
   }, res => {
     const vals = [];
-    res.on('data', vals.push)
-    res.on('end', () => {
-      resolve(JSON.parse(vals))
-    })
+    res.on('data', data => vals.push(data))
+    res.on('end', () => resolve(JSON.parse(Buffer.concat(vals))))
   })
   req.on('error', reject);
   req.write(JSON.stringify(body));
@@ -57,9 +55,9 @@ app.post(/\/subscribe\/([a-zA-Z0-9-_]*)/, async (req, res, next) => {
       res.end('{"error": "a valid URL must be provided."}')
       return;
     }
-    
+
     const key = `${PREFIX}:${topic}`;
-    
+
     let previousValuesForTopic = JSON.parse(await redis.get(key) || '[]');
 
     await redis.set(key, JSON.stringify([...previousValuesForTopic, url]));
@@ -87,14 +85,12 @@ app.post(/\/publish\/([a-zA-Z0-9-_]*)/, async (req, res, next) => {
       res.end('{"error": "Message cannot be empty."}')
       return;
     }
-    
+
     const key = `${PREFIX}:${topic}`;
-    
+
     let allTopicSubscribers = JSON.parse(await redis.get(key) || '[]');
 
-    const eventsResponse = await Promise.all(allTopicSubscribers.map(postToUrl({ data: body, topic })))
-
-    console.log(eventsResponse);
+    await Promise.all(allTopicSubscribers.map(postToUrl({ data: body, topic })))
 
     res.status(200)
     res.end('{"success": "Message successfully published to all subscribers"}')
