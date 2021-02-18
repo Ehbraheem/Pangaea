@@ -3,7 +3,7 @@ FROM node:12.16.2-alpine
 
 ENV NODE_ENV=$NODE_ENV \
     SERVICE_PORT=$SERVICE_PORT \
-    APP_DIR="/usr/src/pangaea"
+    APP_DIR="/usr/src/pangaea/subscriber"
 
 WORKDIR $APP_DIR
 

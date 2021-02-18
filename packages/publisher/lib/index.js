@@ -1,18 +1,16 @@
 const express = require('express')
 const httpRedis = require('http-redis').default
-const { request } = require('https');
+const { request } = require('http');
 
 
 const app = express()
 const port = process.env.SERVICE_PORT || 3000
 
-console.log(httpRedis);
-
 app.use(express.json())
 
 const PREFIX = 'publisher';
 
-const redis = httpRedis({ mode: 'regular', options: { host: process.env.REDIS_HOST } })
+const redis = httpRedis({ mode: 'regular', options: { host: process.env.REDIS_HOST, port: process.env.REDIS_PORT } })
 
 const postToUrl = body => url => new Promise((resolve, reject) => {
   const req = request(url, {
@@ -52,7 +50,7 @@ app.post(/\/subscribe\/([a-zA-Z0-9-_]*)/, async (req, res, next) => {
       return;
     }
 
-    const urlCondition = !url || !/[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi.test(url);
+    const urlCondition = !url || !/[-a-zA-Z0-9@:%._\+~#=]{1,256}[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/=]*)?/gi.test(url);
 
     if (urlCondition) {
       res.status(400)
@@ -63,8 +61,6 @@ app.post(/\/subscribe\/([a-zA-Z0-9-_]*)/, async (req, res, next) => {
     const key = `${PREFIX}:${topic}`;
     
     let previousValuesForTopic = JSON.parse(await redis.get(key) || '[]');
-
-    console.log(previousValuesForTopic)
 
     await redis.set(key, JSON.stringify([...previousValuesForTopic, url]));
 
@@ -96,7 +92,9 @@ app.post(/\/publish\/([a-zA-Z0-9-_]*)/, async (req, res, next) => {
     
     let allTopicSubscribers = JSON.parse(await redis.get(key) || '[]');
 
-    await Promise.all(allTopicSubscribers.map(postToUrl({ data: body, topic })))
+    const eventsResponse = await Promise.all(allTopicSubscribers.map(postToUrl({ data: body, topic })))
+
+    console.log(eventsResponse);
 
     res.status(200)
     res.end('{"success": "Message successfully published to all subscribers"}')
