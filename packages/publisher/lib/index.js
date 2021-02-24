@@ -2,6 +2,8 @@ const express = require('express')
 const httpRedis = require('http-redis').default
 const { request } = require('http');
 
+const { notFound, serverError } = require('../../util')
+
 
 const app = express()
 const APP_PORT = process.env.SERVICE_PORT || 3000
@@ -37,6 +39,8 @@ app.use(async (req, _, next) => {
     next(error)
   }
 })
+
+app.use(serverError)
 
 app.post(/\/subscribe\/([a-zA-Z0-9-_]*)/, async (req, res, next) => {
   try {
@@ -103,6 +107,8 @@ app.post(/\/publish\/([a-zA-Z0-9-_]*)/, async (req, res, next) => {
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
+
+app.all('*', notFound)
 
 app.listen(APP_PORT, () => {
   console.log(`Example app listening at http://localhost:${APP_PORT}`)
