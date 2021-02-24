@@ -1,8 +1,11 @@
 {
-  "name": "subcriber",
+  "name": "pangaea",
   "version": "0.0.1",
-  "description": "Configuration based Redis client middleware for Express.",
+  "description": "Pangaea backend test solution.",
   "main": "lib/index.js",
+  "scripts": {
+    "start": "docker-compose up"
+  },
   "engines": {
     "node": ">=10.14.1"
   },
@@ -13,9 +16,5 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
-  "author": "ehbraheem@gmail.com",
-  "dependencies": {
-    "express": "4.17.1",
-    "http-redis": "^0.0.0-rc.1.0"
-  }
+  "author": "ehbraheem@gmail.com"
 }
