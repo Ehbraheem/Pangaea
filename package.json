@@ -13,6 +13,7 @@
     "type": "git",
     "url": "git+ssh://git+ssh://git@github.com:Ehbraheem/Pangaea.git#main"
   },
+  "license": "MIT",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },

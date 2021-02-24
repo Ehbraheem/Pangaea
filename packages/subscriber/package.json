@@ -9,6 +9,7 @@
   "scripts": {
     "start": "node lib/"
   },
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+ssh://git+ssh://git@github.com:Ehbraheem/Pangaea.git#main"

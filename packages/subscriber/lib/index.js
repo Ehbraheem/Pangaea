@@ -52,7 +52,7 @@ app.post('/event', async (req, res, next) => {
 app.all('*', notFound)
 
 const server = app.listen(APP_PORT, () => {
-  console.log(`Example app listening at http://localhost:${APP_PORT}`)
+  console.log(`Subscriber app listening at http://localhost:${APP_PORT}`)
 })
 
 const cleanUp = server => () => {

@@ -115,7 +115,7 @@ app.get('/', (req, res) => {
 app.all('*', notFound)
 
 const server = app.listen(APP_PORT, () => {
-  console.log(`Example app listening at http://localhost:${APP_PORT}`)
+  console.log(`Publisher app listening at http://localhost:${APP_PORT}`)
 })
 
 
