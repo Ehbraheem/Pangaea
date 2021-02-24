@@ -110,6 +110,17 @@ app.get('/', (req, res) => {
 
 app.all('*', notFound)
 
-app.listen(APP_PORT, () => {
+const server = app.listen(APP_PORT, () => {
   console.log(`Example app listening at http://localhost:${APP_PORT}`)
+})
+
+
+const cleanUp = server => () => {
+  server.close(() => {
+    process.exit(1);
+  })
+}
+
+['exit', 'SIGINT', 'SIGUSR1', 'SIGUSR2', , 'SIGTERM', 'unhandledRejection'].forEach((event) => {
+  process.on(event, cleanUp(server));
 })

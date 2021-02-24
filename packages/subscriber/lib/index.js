@@ -5,7 +5,7 @@ const { notFound, serverError } = require('../../util')
 
 
 const app = express()
-const APP_PORT = process.env.SERVICE_PORT || 3000
+const APP_PORT = process.env.SERVICE_PORT || 8000
 const { REDIS_HOST, REDIS_PORT } = process.env || { REDIS_HOST: 'localhost', REDIS_PORT: 6379 }
 
 app.use(express.json())
@@ -47,6 +47,16 @@ app.post('/event', async (req, res, next) => {
 
 app.all('*', notFound)
 
-app.listen(APP_PORT, () => {
+const server = app.listen(APP_PORT, () => {
   console.log(`Example app listening at http://localhost:${APP_PORT}`)
+})
+
+const cleanUp = server => () => {
+  server.close(() => {
+    process.exit(1);
+  })
+}
+
+['exit', 'SIGINT', 'SIGUSR1', 'SIGUSR2', 'uncaughtException', 'SIGTERM', 'unhandledRejection'].forEach((event) => {
+  process.on(event, cleanUp(server));
 })
