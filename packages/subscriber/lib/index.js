@@ -3,13 +3,14 @@ const { default: httpRedis } = require('http-redis')
 
 
 const app = express()
-const port = process.env.SERVICE_PORT || 8000
+const APP_PORT = process.env.SERVICE_PORT || 3000
+const { REDIS_HOST, REDIS_PORT } = process.env || { REDIS_HOST: 'localhost', REDIS_PORT: 6379 }
 
 app.use(express.json())
 
 const PREFIX = 'subscriber';
 
-const redis = httpRedis({ mode: 'regular', options: { host: process.env.REDIS_HOST } })
+const redis = httpRedis({ mode: 'regular', options: { host: REDIS_HOST, port: REDIS_PORT } })
 
 
 app.use(async (req, _, next) => {
@@ -40,6 +41,6 @@ app.post('/event', async (req, res, next) => {
   }
 })
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+app.listen(APP_PORT, () => {
+  console.log(`Example app listening at http://localhost:${APP_PORT}`)
 })

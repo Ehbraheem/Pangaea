@@ -4,13 +4,14 @@ const { request } = require('http');
 
 
 const app = express()
-const port = process.env.SERVICE_PORT || 3000
+const APP_PORT = process.env.SERVICE_PORT || 3000
+const { REDIS_HOST, REDIS_PORT } = process.env || { REDIS_HOST: 'localhost', REDIS_PORT: 6379 }
 
 app.use(express.json())
 
 const PREFIX = 'publisher';
 
-const redis = httpRedis({ mode: 'regular', options: { host: process.env.REDIS_HOST, port: process.env.REDIS_PORT } })
+const redis = httpRedis({ mode: 'regular', options: { host: REDIS_HOST, port: REDIS_PORT } })
 
 const postToUrl = body => url => new Promise((resolve, reject) => {
   const req = request(url, {
@@ -103,6 +104,6 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+app.listen(APP_PORT, () => {
+  console.log(`Example app listening at http://localhost:${APP_PORT}`)
 })
