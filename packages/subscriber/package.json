@@ -19,6 +19,7 @@
   "author": "ehbraheem@gmail.com",
   "dependencies": {
     "express": "4.17.1",
-    "http-redis": "^0.0.0-rc.1.0"
+    "http-redis": "^0.0.0-rc.1.0",
+    "pino-http": "^5.5.0"
   }
 }

@@ -1,5 +1,6 @@
 const express = require('express')
-const { default: httpRedis } = require('http-redis')
+const { default: httpRedis } = require('http-redis');
+const pino = require('pino-http')();
 
 const { notFound, serverError } = require('../../util')
 
@@ -9,6 +10,8 @@ const APP_PORT = process.env.SERVICE_PORT || 8000
 const { REDIS_HOST, REDIS_PORT } = process.env || { REDIS_HOST: 'localhost', REDIS_PORT: 6379 }
 
 app.use(express.json())
+
+app.use(pino);
 
 const PREFIX = 'subscriber';
 
