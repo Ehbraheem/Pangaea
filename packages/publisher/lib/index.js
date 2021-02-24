@@ -3,7 +3,7 @@ const httpRedis = require('http-redis').default
 const { request } = require('http');
 const pino = require('pino-http')();
 
-const { notFound, serverError } = require('../../util')
+const { notFound, serverError, jsonResponseHelper } = require('../../util')
 
 
 const app = express()
@@ -44,6 +44,7 @@ app.use(async (req, _, next) => {
 })
 
 app.use(serverError)
+app.use(jsonResponseHelper)
 
 app.post(/\/subscribe\/([a-zA-Z0-9-_]*)/, async (req, res, next) => {
   try {

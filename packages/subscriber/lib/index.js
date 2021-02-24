@@ -2,7 +2,7 @@ const express = require('express')
 const { default: httpRedis } = require('http-redis');
 const pino = require('pino-http')();
 
-const { notFound, serverError } = require('../../util')
+const { notFound, serverError, jsonResponseHelper } = require('../../util')
 
 
 const app = express()
@@ -28,6 +28,7 @@ app.use(async (req, _, next) => {
 })
 
 app.use(serverError)
+app.use(jsonResponseHelper)
 
 app.post('/event', async (req, res, next) => {
   try {

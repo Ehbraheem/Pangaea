@@ -24,7 +24,12 @@ const serverError = (
   res.status(500).end(JSON.stringify(errorResponse));
 };
 
+const jsonResponseHelper = (_, res, next) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.contentType('application/json');
+  next();
+}
 
 module.exports = {
-  notFound, serverError
+  notFound, serverError, jsonResponseHelper
 }
