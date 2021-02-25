@@ -12,6 +12,8 @@ services:
       context: ./packages/publisher
     container_name: publisher
     restart: on-failure
+    extra_hosts:
+      - "127.0.0.1:host-gateway"
     links:
       - redis
     depends_on:
