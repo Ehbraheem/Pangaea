@@ -2,14 +2,16 @@ const express = require('express')
 const httpRedis = require('http-redis').default
 const { request } = require('http');
 const pino = require('pino-http')();
+var helmet = require('helmet')
 
-const { notFound, serverError, jsonResponseHelper } = require('../../util')
+const { notFound, serverError, jsonResponseHelper } = require('../util')
 
 
 const app = express()
 const APP_PORT = process.env.SERVICE_PORT || 3000
 const { REDIS_HOST, REDIS_PORT } = process.env || { REDIS_HOST: 'localhost', REDIS_PORT: 6379 }
 
+app.use(helmet())
 app.use(express.json())
 
 app.use(pino);
